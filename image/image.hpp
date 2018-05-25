@@ -6,7 +6,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
-#include "array_utils.hpp"
+#include "../utils/array_utils.hpp"
 
 class UnmatchedLengthException : public std::runtime_error 
 {
