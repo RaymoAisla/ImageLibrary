@@ -1,3 +1,6 @@
+#ifndef ARRAY_UTILS_HPP_INCLUDED
+#define ARRAY_UTILS_HPP_INCLUDED
+
 #include <array>
 
 template<class Element, size_t dimension>
@@ -71,3 +74,5 @@ bool operator <= (const std::array<Element, dimension> & firstArray, const std::
 
     return comparisonResult;
 }
+
+#endif /* ARRAY_UTILS_HPP_INCLUDED */
