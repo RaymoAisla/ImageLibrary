@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 #include <array>
 #include <vector>
-#include "image.hpp"
+#include "../image.hpp"
 
 Image getWellSetImage()
 {
@@ -26,17 +26,33 @@ TEST(ImageInitShould, ThrowIfUnaccordedSizeAreGiven)
     EXPECT_THROW(Image(dim, vec), UnmatchedLengthException);
 }
 
-TEST(ImageGetValueShould, ReturnTheGoodValue)
+TEST(ImageOffsetShould, ReturnTheGoodOffsetArray)
 {
     Image im{getWellSetImage()};
+    ImageOffset imgOffset{im};
 
-    EXPECT_EQ(55, im.getValue({0,1,2}));
-    EXPECT_EQ(7, im.getValue({2,1,0}));
-    EXPECT_EQ(0, im.getValue({0,0,0}));
-    EXPECT_EQ(124, im.getValue({4,4,4}));
+    std::array<size_t, 3> & offsetArrayRef = imgOffset.getOffsetArray();
 
-    EXPECT_THROW(im.getValue({5,0,0}), OutOfBoundsException);
-    EXPECT_THROW(im.getValue({5,5,5}), OutOfBoundsException);
+    std::array<size_t, 3> testValuesOffset{1, 5, 25};
+
+    for (auto index{0}; index < 3; ++index)
+    {
+        EXPECT_EQ(offsetArrayRef[index], testValuesOffset[index]);
+    }
+}
+
+TEST(ImageElementGridShould, ReturnTheGoodValue)
+{
+    Image im{getWellSetImage()};
+    ImageElementGrid imageElementGrid{im};
+
+    EXPECT_EQ(55, imageElementGrid({0,1,2}));
+    EXPECT_EQ(7, imageElementGrid({2,1,0}));
+    EXPECT_EQ(0, imageElementGrid({0,0,0}));
+    EXPECT_EQ(124, imageElementGrid({4,4,4}));
+
+    EXPECT_THROW(imageElementGrid({5,0,0}), OutOfBoundsException);
+    EXPECT_THROW(imageElementGrid({5,5,5}), OutOfBoundsException);
 }
 
 int main(int argc, char** argv) {
