@@ -2,6 +2,9 @@
 #include <array>
 #include <vector>
 #include "../image.hpp"
+#include "../image_offset.hpp"
+#include "../image_element_grid.hpp"
+
 
 Image getWellSetImage()
 {
