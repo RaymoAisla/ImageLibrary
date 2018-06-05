@@ -32,6 +32,11 @@ public:
         return offsetArray;
     };
 
+    bool hasSameId(size_t id)
+    {
+        return id == image.imageId;
+    }
+
     friend bool operator ==(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2);
     friend bool operator !=(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2);
 

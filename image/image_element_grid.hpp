@@ -22,7 +22,7 @@ public:
     {};
     ImageElementGrid(Image<Element, dimension> & imageRef, const ImageOffset<Element, dimension> & imageOffsetRef) : image{imageRef}, imageOffset{imageOffsetRef}
     {
-        if (imageOffset != ImageOffset(imageRef)) throw UncorrectMappingException(); 
+        if (!imageOffset.hasSameId(imageRef.imageId)) throw UncorrectMappingException(); 
     };
 
     size_t getGlobalIndexFromPosition(const std::array<size_t, dimension> & positionArray)
@@ -59,6 +59,11 @@ public:
 
         return image.imageData[offset];
     };
+
+    bool hasSameId(size_t id)
+    {
+        return id == image.imageId;
+    }
 
 };
 
