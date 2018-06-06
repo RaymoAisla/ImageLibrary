@@ -10,8 +10,6 @@
 #include "image_offset.hpp"
 #include "image_exceptions.hpp"
 
-typedef bool isDefined;
-
 template <class Element, size_t dimension>
 class ImageGlobalProperties
 {
@@ -20,12 +18,13 @@ class ImageGlobalProperties
     std::optional<std::vector<Element>::iterator> max;
     std::optional<std::vector<Element>::iterator> min;
     std::optional<std::reference_wrapper<ImageElementGrid>> imageElementGrid;
+    std::optional<std::vector<size_t>> weightArray;
 
     public:
     ImageGlobalProperties() = delete;
-    ImageGlobalProperties(const Image<Element, dimension>  & imageRef) : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{std::nullopt} {};
+    ImageGlobalProperties(const Image<Element, dimension>  & imageRef) : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{std::nullopt}, weightArray{std::nullopt} {};
     ImageGlobalProperties(const Image<Element, dimension>  & imageRef, ImageElementGrid & imageElementGridRef) 
-        : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{imageElementGridRef} 
+        : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{imageElementGridRef}, weightArray{std::nullopt}
     {
         if (!imageElementGrid.hasSameId(image.imageId)) throw UncorrectMappingException(); 
     };
@@ -51,10 +50,29 @@ class ImageGlobalProperties
     std::array<size_t, dimension> indexOfMaxValue()
     {
         maxValue();
-        size_t index{std::distance(image.imageData.begin(), max)};
+        size_t index{std::distance(image.imageData.begin(), *max)};
 
-        return getPositionFromGlobalIndex(index);
+        return imageElementGrid.getPositionFromGlobalIndex(index);
     };
+
+    std::array<size_t, dimension> indexOfMinValue()
+    {
+        minValue();
+        size_t index{std::distance(image.imageData.begin(), *min)};
+
+        return imageElementGrid.getPositionFromGlobalIndex(index);
+    };
+
+    std::map<Element, size_t> histogram()
+    {
+        if (!weightArray.has_value())
+        {
+            minValue();
+            maxValue();
+
+            weightArray = std::vector<size_t>(maxValue-minValue, 0);
+        }
+    }
     
 };
 
