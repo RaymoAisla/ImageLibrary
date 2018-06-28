@@ -2,6 +2,7 @@
 #define IMAGE_ELEMENT_GRID_HPP_INCLUDED
 
 #include <exception>
+#include <sstream>
 
 class UnmatchedLengthException : public std::runtime_error 
 {

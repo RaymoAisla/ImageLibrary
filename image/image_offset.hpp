@@ -8,6 +8,21 @@
 #include "image.hpp"
 
 template <class Element, size_t dimension>
+class ImageOffset;
+
+template <class Element, size_t dimension>
+bool operator ==(const ImageOffset<Element, dimension> & imgOffset1, const ImageOffset<Element, dimension> & imgOffset2)
+{
+    return (imgOffset1.offsetArray == imgOffset2.offsetArray && imgOffset1.image.imageId == imgOffset2.image.imageId);
+}
+
+template <class Element, size_t dimension>
+bool operator !=(const ImageOffset<Element, dimension> & imgOffset1, const ImageOffset<Element, dimension> & imgOffset2)
+{
+    return !(imgOffset1 == imgOffset2);
+}
+
+template <class Element, size_t dimension>
 class ImageOffset {
 
 private:
@@ -35,21 +50,12 @@ public:
     bool hasSameId(size_t id)
     {
         return id == image.imageId;
-    }
+    };
 
-    friend bool operator ==(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2);
-    friend bool operator !=(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2);
+    friend bool operator ==<>(const ImageOffset<Element, dimension> & imgOffset1, const ImageOffset<Element, dimension> & imgOffset2);
+    
+    friend bool operator !=<>(const ImageOffset<Element, dimension> & imgOffset1, const ImageOffset<Element, dimension> & imgOffset2);
 
 };
-
-bool operator ==(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2)
-{
-    return (imgOffset1.offsetArray == imgOffset2.offsetArray && imgOffset1.image.imageId == imgOffset2.image.imageId);
-}
-
-bool operator !=(const ImageOffset & imgOffset1, const ImageOffset & imgOffset2)
-{
-    return !(imgOffset1 == imgOffset2);
-}
 
 #endif /* IMAGE_OFFSET_HPP_INCLUDED */

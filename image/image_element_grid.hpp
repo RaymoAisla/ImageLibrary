@@ -18,7 +18,7 @@ private:
 
 public:
     ImageElementGrid() = delete;
-    ImageElementGrid(Image<Element, dimension> & imageRef) : image{imageRef}, imageOffset{ImageOffset(imageRef)}
+    ImageElementGrid(Image<Element, dimension> & imageRef) : image{imageRef}, imageOffset{ImageOffset<Element, dimension>(imageRef)}
     {};
     ImageElementGrid(Image<Element, dimension> & imageRef, const ImageOffset<Element, dimension> & imageOffsetRef) : image{imageRef}, imageOffset{imageOffsetRef}
     {
@@ -53,9 +53,9 @@ public:
         return positionArray;
     }
 
-    Element & override ()(const std::array<size_t, dimension> & positionArray)
+    Element & operator ()(const std::array<size_t, dimension> & positionArray)
     {
-        getGlobalIndexFromPosition(positionArray);
+        size_t offset = getGlobalIndexFromPosition(positionArray);
 
         return image.imageData[offset];
     };

@@ -4,6 +4,7 @@
 #include <functional>
 #include <optional>
 #include <array>
+#include <map>
 #include <algorithm>
 #include "../utils/array_utils.hpp"
 #include "image.hpp"
@@ -18,13 +19,13 @@ class ImageGlobalProperties
     std::optional<std::vector<Element>::iterator> max;
     std::optional<std::vector<Element>::iterator> min;
     std::optional<std::reference_wrapper<ImageElementGrid>> imageElementGrid;
-    std::optional<std::vector<size_t>> weightArray;
+    std::optional<std::map<Element, size_t>> histogramMap;
 
     public:
     ImageGlobalProperties() = delete;
-    ImageGlobalProperties(const Image<Element, dimension>  & imageRef) : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{std::nullopt}, weightArray{std::nullopt} {};
+    ImageGlobalProperties(const Image<Element, dimension>  & imageRef) : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{std::nullopt}, histogramMap{std::nullopt} {};
     ImageGlobalProperties(const Image<Element, dimension>  & imageRef, ImageElementGrid & imageElementGridRef) 
-        : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{imageElementGridRef}, weightArray{std::nullopt}
+        : image{imageRef}, max{std::nullopt}, min{std::nullopt}, imageElementGrid{imageElementGridRef}, histogramMap{std::nullopt}
     {
         if (!imageElementGrid.hasSameId(image.imageId)) throw UncorrectMappingException(); 
     };
@@ -63,15 +64,16 @@ class ImageGlobalProperties
         return imageElementGrid.getPositionFromGlobalIndex(index);
     };
 
-    std::map<Element, size_t> histogram()
+    std::map<Element, size_t> & histogram()
     {
-        if (!weightArray.has_value())
+        if (!histogramMap.has_value())
         {
-            minValue();
-            maxValue();
-
-            weightArray = std::vector<size_t>(maxValue-minValue, 0);
+            for (Element element : image.imageData)
+            {
+                ++(*histogramMap)[element];
+            }
         }
+        return histogramMap;
     }
     
 };

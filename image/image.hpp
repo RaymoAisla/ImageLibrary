@@ -43,4 +43,7 @@ struct Image
     }; 
 };
 
+template <class Element, size_t dimension>
+size_t Image<Element, dimension>::imageIdCounter = 0;
+
 #endif /* IMAGE_HPP_INCLUDED */
